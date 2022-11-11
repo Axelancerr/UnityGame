@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovementV2 : MonoBehaviour
@@ -36,10 +34,9 @@ public class PlayerMovementV2 : MonoBehaviour
             moveDirection.y = 0f;
             if (Input.GetButtonDown("Jump"))
             {
-            moveDirection.y = jumpForce;
+                moveDirection.y = jumpForce;
             }
         }
-        
 
 
         moveDirection.y += (Physics.gravity.y * gravityScale);
