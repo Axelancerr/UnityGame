@@ -1,33 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
     //Declare Variables 
     public float moveSpeed;
-    public Rigidbody rb;
     public float jumpForce;
+    public CharacterController controller;
+    public float gravityScale;
+    private Vector3 moveDirection;
 
     // Start is called before the first frame update
     void Start()
     {
         moveSpeed = 10;
-        rb = GetComponent<Rigidbody>();
-        jumpForce = 7;
+        controller = GetComponent<CharacterController>();
+        jumpForce = 30;
+        gravityScale = 0.05f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Jump"))
+        float currentYValue = moveDirection.y;
+        moveDirection = (transform.right * Input.GetAxis("Horizontal")) +
+                        (transform.forward * Input.GetAxis("Vertical"));
+
+        //remove the extra speed on diagonal movement
+        moveDirection = moveDirection.normalized * moveSpeed;
+        moveDirection.y = currentYValue;
+
+        if (controller.isGrounded)
         {
-            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+            moveDirection.y = 0f;
+            if (Input.GetButtonDown("Jump"))
+            {
+                moveDirection.y = jumpForce;
+            }
         }
 
-        //Vector3( x , y , z )
-        rb.velocity = new Vector3(Input.GetAxis("Horizontal") * moveSpeed,
-                      rb.velocity.y, Input.GetAxis("Vertical") * moveSpeed); 
+
+        moveDirection.y += (Physics.gravity.y * gravityScale);
+
+        controller.Move(moveDirection * Time.deltaTime);
     }
 }

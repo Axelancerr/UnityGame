@@ -1,26 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     //Declare variables
     public Transform target;
+
     public Vector3 offset;
-    //Used to toggle a default offset or allow us to change the 
-    //value
+    
     public bool useOffsetValues;
     public float rotateSpeed;
 
     public Transform pivot;
-
-    // Start is called before the first frame update
     void Start()
     {
         if (!useOffsetValues)
         {
-            //checking the distance between the camera and player
-            //set that distance value to the offset
             offset = target.position - transform.position;
         }
 
@@ -28,13 +22,11 @@ public class CameraController : MonoBehaviour
         pivot.transform.parent = target.transform;
 
         Cursor.lockState = CursorLockMode.Locked;
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
         //get the x position of the mouse & rotate the target
         float horizontal = Input.GetAxis("Mouse X") * rotateSpeed;
         target.Rotate(0, horizontal, 0);
@@ -50,10 +42,9 @@ public class CameraController : MonoBehaviour
         transform.position = target.position - (rotation * offset);
 
         //check the camera is going below the players feet
-        if(transform.position.y < target.position.y)
+        if (transform.position.y < target.position.y)
         {
-            transform.position = new Vector3(transform.position.x,
-                transform.position.y -.5f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y - .5f, transform.position.z);
         }
 
         transform.LookAt(target);
